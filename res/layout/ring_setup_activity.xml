@@ -14,7 +14,8 @@
         android:layout_alignParentTop="true"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/switch_smart_mode" />
+        android:text="@string/switch_smart_mode"
+        android:onClick="onToggleSmartModeClicked" />
     
     <View
         android:id="@+id/verticalLine1"
@@ -87,7 +88,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/verticalLine2"
-        android:text="@string/switch_timer_mode" />
+        android:text="@string/switch_timer_mode"
+        android:onClick="onToggleTimerModeClicked" />
 
     <TextView
         android:id="@+id/textView4"

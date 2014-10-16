@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ToggleButton;
 
 
 public class RingSetupActivity extends Activity {
@@ -32,5 +34,41 @@ public class RingSetupActivity extends Activity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    
+    /**
+     * Action à mener lorsque l'utilisateur 
+     * active ou désactive l'interrupteur
+     * SMART MODE
+     * @param view décrivant le contexte
+     */
+    public void onToggleSmartModeClicked(View view){
+    	// From http://developer.android.com/guide/topics/ui/controls/togglebutton.html
+    	boolean on = ((ToggleButton) view).isChecked();
+        
+        if (on) {
+            // Enable function
+        	
+        	
+        } else {
+            // Disable function (if already started)
+        	
+        }
+    }
+    
+    public void onToggleTimerModeClicked(View view){
+    	// From http://developer.android.com/guide/topics/ui/controls/togglebutton.html
+    	boolean on = ((ToggleButton) view).isChecked();
+        
+        if (on) {
+            // Enable function
+        	
+        	// Activité : voir Service, TimerTask, AudioManager
+        	//TODO
+        	
+        } else {
+            // Disable function (if already started)
+        	
+        }
     }
 }
