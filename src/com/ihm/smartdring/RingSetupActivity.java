@@ -1,14 +1,16 @@
 package com.ihm.smartdring;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ToggleButton;
+import android.widget.Switch;
 
 
 public class RingSetupActivity extends Activity {
+	public final static String TIME_SET = "com.ihm.smartdring.TIME_SET";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +46,7 @@ public class RingSetupActivity extends Activity {
      */
     public void onToggleSmartModeClicked(View view){
     	// From http://developer.android.com/guide/topics/ui/controls/togglebutton.html
-    	boolean on = ((ToggleButton) view).isChecked();
+    	boolean on = ((Switch) view).isChecked();
         
         if (on) {
             // Enable function
@@ -58,13 +60,18 @@ public class RingSetupActivity extends Activity {
     
     public void onToggleTimerModeClicked(View view){
     	// From http://developer.android.com/guide/topics/ui/controls/togglebutton.html
-    	boolean on = ((ToggleButton) view).isChecked();
+    	boolean on = ((Switch) view).isChecked();
         
+    	
         if (on) {
             // Enable function
         	
-        	// Activité : voir Service, TimerTask, AudioManager
-        	//TODO
+        	Intent timer = new Intent(this, TimerService.class);
+        	// Get the time set by the user
+        	long timeSet = 5000;
+            timer.putExtra(TIME_SET, timeSet);
+            // Launch service
+        	startService(timer);
         	
         } else {
             // Disable function (if already started)
