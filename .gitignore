@@ -1,0 +1,15 @@
+bin/classes/com/ihm/smartdring/*.class
+
+bin/res/crunch/*
+
+bin/jarlist.cache
+
+bin/classes.dex
+
+bin/dexedLibs/*
+
+bin/resources.ap_
+
+bin/SmartDring.apk
+
+gen/com/ihm/smartdring/R.java
