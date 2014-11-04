@@ -24,11 +24,11 @@
         </activity>
         
         <service
-            android:name=".TimerService"
+            android:name="com.ihm.smartdring.listeners.TimerService"
             android:exported="false" >
         </service>
         
-        <receiver android:name=".CallDetector" >
+        <receiver android:name="com.ihm.smartdring.listeners.CallDetector" >
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" >
                 </action>

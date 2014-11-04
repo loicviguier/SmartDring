@@ -1,4 +1,4 @@
-package com.ihm.smartdring;
+package com.ihm.smartdring.listeners;
 
 import android.app.Service;
 import android.content.Intent;

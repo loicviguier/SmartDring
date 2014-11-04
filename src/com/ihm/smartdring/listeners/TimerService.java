@@ -1,4 +1,4 @@
-package com.ihm.smartdring;
+package com.ihm.smartdring.listeners;
 
 import java.util.Timer;
 import java.util.TimerTask;

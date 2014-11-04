@@ -1,4 +1,4 @@
-package com.ihm.smartdring;
+package com.ihm.smartdring.listeners;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

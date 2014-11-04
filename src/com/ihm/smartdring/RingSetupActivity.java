@@ -1,5 +1,7 @@
 package com.ihm.smartdring;
 
+import com.ihm.smartdring.listeners.TimerService;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
