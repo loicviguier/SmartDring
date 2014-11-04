@@ -13,3 +13,5 @@ bin/resources.ap_
 bin/SmartDring.apk
 
 gen/com/ihm/smartdring/R.java
+
+bin/classes/com/ihm/smartdring/RingSetupActivity.class

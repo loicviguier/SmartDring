@@ -7,38 +7,76 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.content.Context;
+import android.provider.OpenableColumns;
 import android.util.Log;
 
 public class ProfilesList {
-	private static String FILENAME = "profiles";
-	
+
+	// =============================
+	// Attributes
+	// =============================
+
+	private static final String FILENAME = "profiles";
+
+	private Context fileContext;
 	private List<Profile> profiles;
 
-	public ProfilesList() {
-		// TODO Auto-generated constructor stub
-		profiles = new ArrayList<Profile>();
+	// =============================
+	// Constructor
+	// =============================
+
+	/**
+	 * Construct a new ProfilesList instance with the current application context
+	 * @param fileContext
+	 */
+	public ProfilesList(Context fileContext) {
+		super();
+		this.fileContext = fileContext;
+		this.profiles = new ArrayList<Profile>();
 	}
 
+	// =============================
+	// Methods
+	// =============================
+
+	/**
+	 * Method used to save the profiles list
+	 */
 	public void saveProfilesList(){
+		FileOutputStream fos;
+		ObjectOutputStream oos;
+
 		try {
-			FileOutputStream fos = ;
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			fos = fileContext.getApplicationContext().openFileOutput(FILENAME, Context.MODE_PRIVATE);
+			oos = new ObjectOutputStream(fos);
+
 			oos.writeObject(this.profiles);
+
 			oos.flush(); 
 			oos.close();
+
 		} catch(Exception ex) {
 			Log.v("Profile List Serialization Save Error : ", ex.getMessage());
 			ex.printStackTrace();
 		}
 	}
 
+	/**
+	 * Method used to load the profile list
+	 */
 	public void loadProfilesList() {
+		FileInputStream fis;
+		ObjectInputStream ois;
+
 		try {
-			FileInputStream fis = ;
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			Object output = ois.readObject();
-			this.profiles = (ArrayList<Profile>) output;
+			fis = fileContext.getApplicationContext().openFileInput(FILENAME);
+			ois = new ObjectInputStream(fis);
+
+			this.profiles = (ArrayList<Profile>) ois.readObject();
+
 			ois.close();
+
 		} catch(Exception ex) {
 			Log.v("Profile List Serialization Read Error : ",ex.getMessage());
 			ex.printStackTrace();
