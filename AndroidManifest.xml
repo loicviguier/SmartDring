@@ -25,7 +25,15 @@
         
         <service
             android:name=".TimerService"
-            android:exported="false"/>
+            android:exported="false" >
+        </service>
+        
+        <receiver android:name=".CallDetector" >
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE" >
+                </action>
+            </intent-filter>
+        </receiver>
             
     </application>
 
