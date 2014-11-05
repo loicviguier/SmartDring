@@ -21,7 +21,8 @@ public class ProfilesList {
 
 	public void saveProfilesList(){
 		try {
-			FileOutputStream fos = ;
+			//TODO
+			FileOutputStream fos = null;
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			oos.writeObject(this.profiles);
 			oos.flush(); 
@@ -34,7 +35,8 @@ public class ProfilesList {
 
 	public void loadProfilesList() {
 		try {
-			FileInputStream fis = ;
+			//TODO
+			FileInputStream fis = null;
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			Object output = ois.readObject();
 			this.profiles = (ArrayList<Profile>) output;

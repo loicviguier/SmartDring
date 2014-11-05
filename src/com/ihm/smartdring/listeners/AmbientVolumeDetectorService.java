@@ -2,6 +2,7 @@ package com.ihm.smartdring.listeners;
 
 import java.io.IOException;
 
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 //For documentation on MediaRecorder, see
@@ -17,16 +18,17 @@ import android.os.IBinder;
  * @author Guillaume
  */
 public class AmbientVolumeDetectorService extends Service {
-	
+	private NotificationManager mNM;
 	private MediaRecorder myRecorder;
 	private Handler myHandler;
 	private Runnable myRunnable = new Runnable() {
 		@Override
 		public void run() {
+			//TODO retrieve the value of activated
 			boolean activated = false;
 			long delay = 10000;
 			
-			// while we are active
+			// While we are active
 			if(activated) {
 				startRecorder();
 				//TODO Evaluate ambient volume and adjusts
@@ -36,7 +38,10 @@ public class AmbientVolumeDetectorService extends Service {
 				myHandler.postDelayed(myRunnable, delay);
 			}
 			else {
+				// Get out of the loop properly
 				myHandler.removeCallbacks(this);
+				// and stops the service
+				stopSelf();
 			}
 			
 	    }
@@ -49,16 +54,13 @@ public class AmbientVolumeDetectorService extends Service {
 	}
 	
 	
-	// For documentation on MediaRecorder, see
-	// http://developer.android.com/reference/android/media/MediaRecorder.html
+
 	@Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+		mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		myHandler = new Handler();
-		myRecorder = new MediaRecorder();
-        myRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        myRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        myRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-        myRecorder.setOutputFile("/dev/null");
+		
+		initializeRecorder();
         
         myHandler.post(myRunnable);
 		
@@ -68,19 +70,29 @@ public class AmbientVolumeDetectorService extends Service {
     }
 	
 	
+	private void initializeRecorder() {
+		// For documentation on MediaRecorder, see
+		// http://developer.android.com/reference/android/media/MediaRecorder.html
+		myRecorder = new MediaRecorder();
+        myRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        myRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        myRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+        myRecorder.setOutputFile("/dev/null");
+	}
 	
 	
-	private void startRecorder(){
+	private void startRecorder() {
 		try {
 			myRecorder.prepare();
 		} catch (IllegalStateException e) {
-			// myRecorder has not been initiated properly
-			//TODO
+			// myRecorder has not been initialized properly
+			initializeRecorder();
 			e.printStackTrace();
+			startRecorder();
 		} catch (IOException e) {
 			// Mic is not accessible
 			//TODO
-			e.printStackTrace();
+			
 		}
         myRecorder.start();
 	}
