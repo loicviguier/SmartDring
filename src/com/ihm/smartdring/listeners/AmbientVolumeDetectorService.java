@@ -4,12 +4,18 @@ import java.io.IOException;
 
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
-//For documentation on MediaRecorder, see
-// http://developer.android.com/reference/android/media/MediaRecorder.html
+import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.media.MediaRecorder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
+//For documentation on MediaRecorder, see
+// http://developer.android.com/reference/android/media/MediaRecorder.html
+import android.util.Log;
 
 /**
  * For information and documentation see
@@ -18,29 +24,43 @@ import android.os.IBinder;
  * @author Guillaume
  */
 public class AmbientVolumeDetectorService extends Service {
+	private final String tagAmbientVolumeOn = "com.example.testambientvolume.tagambientvolumeon";
+	private SharedPreferences settings;
+	private static final String TAG = "AmbientVolumeDetector";
 	private NotificationManager mNM;
 	private MediaRecorder myRecorder;
 	private Handler myHandler;
+	private int maxAmplitude;
+	private AudioManager myAudioManager;
+	private int userRingerMode;
+	
 	private Runnable myRunnable = new Runnable() {
 		@Override
 		public void run() {
-			//TODO retrieve the value of activated
-			boolean activated = false;
+			//TODO Retrieve activation
+			boolean activated = settings.getBoolean(tagAmbientVolumeOn, true);
 			long delay = 10000;
 			
 			// While we are active
 			if(activated) {
-				startRecorder();
-				//TODO Evaluate ambient volume and adjusts
-				myRecorder.stop();
+				maxAmplitude = myRecorder.getMaxAmplitude();
+				
+				//TODO retrieve max authorized volume
+				int maxVolume = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
+				int newVolume = maxAmplitude * 100 / 32767;
+				// Volume is at least = 1
+				newVolume = 1 + Math.round(newVolume * maxVolume / 100);
+				
+				Log.d(TAG, "[Service] : Tick, amplitude = " + maxAmplitude + ", new volume = " + newVolume);
+				
+				myAudioManager.setStreamVolume(AudioManager.STREAM_RING, newVolume, 0);
+				myAudioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, newVolume, 0);
 				
 				// Repetition of the task
 				myHandler.postDelayed(myRunnable, delay);
 			}
 			else {
-				// Get out of the loop properly
-				myHandler.removeCallbacks(this);
-				// and stops the service
+				// Stops the service
 				stopSelf();
 			}
 			
@@ -53,21 +73,34 @@ public class AmbientVolumeDetectorService extends Service {
 		return null;
 	}
 	
-	
 
 	@Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 		mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		myHandler = new Handler();
+		myAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
+		userRingerMode = myAudioManager.getRingerMode();
+		settings = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		initializeRecorder();
+		startRecorder();
         
         myHandler.post(myRunnable);
-		
+        
+        Log.d(TAG, "[ServiceAmbientVolume] : Runnable lancé. Booléen = " + settings.getBoolean(tagAmbientVolumeOn, true));
+        
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
         return START_STICKY;
     }
+	
+	
+	@Override
+    public void onDestroy() {
+		myRecorder.stop();
+		myHandler.removeCallbacks(myRunnable);
+		myAudioManager.setRingerMode(userRingerMode);
+	}
 	
 	
 	private void initializeRecorder() {
@@ -91,10 +124,49 @@ public class AmbientVolumeDetectorService extends Service {
 			startRecorder();
 		} catch (IOException e) {
 			// Mic is not accessible
-			//TODO
-			
+			showErrorNotification();
+			stopSelf();
 		}
         myRecorder.start();
+
+        // Returns 0 for the first call
+        myRecorder.getMaxAmplitude();
+	}
+	
+	
+	private void showErrorNotification() {
+		int notifID = 1;
+
+        // Set the icon, scrolling text and timestamp
+        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        
+        mBuilder.setSmallIcon(com.ihm.smartdring.R.drawable.ic_launcher);
+        mBuilder.setContentTitle("Erreur");
+        mBuilder.setContentText("Le micro est inaccessible.");
+
+        /*
+        // Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(this, MainActivity.class);
+
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(MainActivity.class);
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                    0,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        */
+
+        // Send the notification.
+        mNM.notify(notifID, mBuilder.build());
 	}
 	
 }
