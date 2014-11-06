@@ -1,4 +1,3 @@
-bin/classes/com/ihm/smartdring/*.class
 
 bin/res/crunch/*
 
@@ -14,4 +13,6 @@ bin/SmartDring.apk
 
 gen/com/ihm/smartdring/R.java
 
-bin/classes/com/ihm/smartdring/RingSetupActivity.class
+bin/classes/com/ihm/smartdring/*
+
+bin/AndroidManifest.xml

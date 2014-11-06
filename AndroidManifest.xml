@@ -3,7 +3,7 @@
     package="com.ihm.smartdring"
     android:versionCode="1"
     android:versionName="1.0" >
-    
+
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <uses-sdk
@@ -24,19 +24,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <service
-            android:name="com.ihm.smartdring.listeners.TimerService"
+            android:name=".listeners.TimerService"
             android:exported="false" >
         </service>
-        
-        <receiver android:name="com.ihm.smartdring.listeners.CallDetector" >
+
+        <receiver android:name=".listeners.CallDetector" >
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" >
                 </action>
             </intent-filter>
         </receiver>
-            
+
+        <activity
+            android:name=".ProfilesListActivity"
+            android:label="@string/title_activity_profiles_list" >
+        </activity>
     </application>
 
 </manifest>

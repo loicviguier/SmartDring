@@ -1,7 +1,5 @@
 package com.ihm.smartdring;
 
-import java.util.ArrayList;
-
 public class Profile {
 	
 	// =============================
