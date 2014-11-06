@@ -8,5 +8,7 @@
     <string name="text_view_volume">Volume</string>
     <string name="title_activity_profiles_list">SmartDring</string>
     <string name="text_switch_activate">Activate</string>
+    <string name="menu_add_profile">Add a profile</string>
+    <string name="menu_discard_profile">Discard the current profile</string>
 
 </resources>

@@ -1,16 +1,27 @@
 package com.ihm.smartdring;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class ProfilesListActivity extends Activity {
+	//private Button addProfile = null;
+	private Intent profileSettingActivity = null;
+	
+	private void initialize() {
+		//this.addProfile = (Button)findViewById(R.id.menu_add_profile);
+		this.profileSettingActivity = new Intent(this, ProfileSetupActivity.class);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.profiles_list_activity);
+		
+		this.initialize();
+		
 	}
 
 	@Override
@@ -22,13 +33,14 @@ public class ProfilesListActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		
+		switch(item.getItemId()) {
+			case R.id.menu_add_profile:
+				startActivity(this.profileSettingActivity);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
-		return super.onOptionsItemSelected(item);
+		
 	}
 }
