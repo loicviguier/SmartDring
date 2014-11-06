@@ -11,6 +11,7 @@
     <string name="horizontal_position_mode">Horizontal position</string>
     <string name="switch_timer_mode">Timer mode</string>
     <string name="description_timer_mode">Adjust the power of the ring for a preset time</string>
-    <string name="title_activity_profiles_list">Profiles List</string>
+    <string name="title_activity_profiles_list">SmartDring</string>
+    <string name="text_switch_activate">Activate</string>
 
 </resources>

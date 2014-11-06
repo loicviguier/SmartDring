@@ -11,13 +11,13 @@ import android.view.View;
 import android.widget.Switch;
 
 
-public class RingSetupActivity extends Activity {
+public class ProfileSetupActivity extends Activity {
 	public final static String TIME_SET = "com.ihm.smartdring.TIME_SET";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.ring_setup_activity);
+        setContentView(R.layout.profile_setup_activity);
     }
 
 
@@ -41,10 +41,10 @@ public class RingSetupActivity extends Activity {
     }
     
     /**
-     * Action à mener lorsque l'utilisateur 
-     * active ou désactive l'interrupteur
+     * Action ï¿½ mener lorsque l'utilisateur 
+     * active ou dï¿½sactive l'interrupteur
      * SMART MODE
-     * @param view décrivant le contexte
+     * @param view dï¿½crivant le contexte
      */
     public void onToggleSmartModeClicked(View view){
     	// From http://developer.android.com/guide/topics/ui/controls/togglebutton.html
