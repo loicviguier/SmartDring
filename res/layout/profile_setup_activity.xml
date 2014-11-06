@@ -11,7 +11,7 @@
     tools:context="com.ihm.smartdring.ProfileSetupActivity" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/textViewVolume"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -22,7 +22,7 @@
         android:textSize="16sp" />
 
     <SeekBar
-        android:id="@+id/seekBar1"
+        android:id="@+id/seekBarVolume"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -33,16 +33,16 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="20dp"
-        android:layout_below="@+id/textView1" />
+        android:layout_below="@+id/textViewVolume" />
     
     <ListView
-        android:id="@+id/listView2"
+        android:id="@+id/listViewSetupProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="10dp"
-        android:layout_below="@+id/seekBar1"
+        android:layout_below="@+id/seekBarVolume"
         android:background="#F5F5F5" >
     </ListView>
     
