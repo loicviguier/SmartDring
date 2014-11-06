@@ -5,6 +5,15 @@
     android:versionName="1.0" >
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.sensor.compass"
+        android:required="true" />
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -27,6 +36,12 @@
         <service
             android:name=".listeners.TimerService"
             android:exported="false" >
+        </service>
+        
+        <service
+            android:name=".listeners.FlipService"
+            android:exported="false"
+            android:launchMode="singleInstance" >
         </service>
 
         <receiver android:name=".listeners.CallDetector" >

@@ -3,8 +3,17 @@
     package="com.ihm.smartdring"
     android:versionCode="1"
     android:versionName="1.0" >
-    
+
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    
+    <uses-feature
+        android:name="android.hardware.sensor.accelerometer"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.sensor.compass"
+        android:required="true" />
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -16,27 +25,36 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".RingSetupActivity"
+            android:name=".ProfileSetupActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
+
         <service
-            android:name="com.ihm.smartdring.listeners.TimerService"
+            android:name=".listeners.TimerService"
             android:exported="false" >
         </service>
         
-        <receiver android:name="com.ihm.smartdring.listeners.CallDetector" >
+        <service
+            android:name=".listeners.FlipService"
+            android:exported="false"
+            android:launchMode="singleInstance" >
+        </service>
+
+        <receiver android:name=".listeners.CallDetector" >
             <intent-filter>
                 <action android:name="android.intent.action.PHONE_STATE" >
                 </action>
             </intent-filter>
         </receiver>
-            
+
+        <activity
+            android:name=".ProfilesListActivity"
+            android:label="@string/title_activity_profiles_list" >
+        </activity>
     </application>
 
 </manifest>
