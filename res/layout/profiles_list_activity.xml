@@ -6,6 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:scrollbars="horizontal"
     android:background="#E6E6E6"
     tools:context="com.ihm.smartdring.ProfilesListActivity" >
 
@@ -30,10 +31,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/switch1"
         android:layout_marginBottom="10dp"
+        android:layout_below="@+id/switch1"
         android:background="#F5F5F5" >
-
     </ListView>
 
 </RelativeLayout>
