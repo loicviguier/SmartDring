@@ -1,23 +1,41 @@
 package com.ihm.smartdring;
 
-import com.ihm.smartdring.listeners.TimerService;
-
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Switch;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 
 public class ProfileSetupActivity extends Activity {
-	public final static String TIME_SET = "com.ihm.smartdring.TIME_SET";
+	private ListView profileSetupListView = null;
+	
+	private void initialize() {
+		this.profileSetupListView = (ListView) findViewById(R.id.listViewSetupProfile);
+	}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_setup_activity);
+        
+        this.initialize();
+        
+        Boolean[] exemple = {true, false, false};
+        
+        ProfileSetupListAdapter adapter = new ProfileSetupListAdapter(this, exemple);
+        this.profileSetupListView.setAdapter(adapter);
+        
+        this.profileSetupListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
     }
 
 
@@ -43,44 +61,4 @@ public class ProfileSetupActivity extends Activity {
     	}
     }
     
-    /**
-     * Action � mener lorsque l'utilisateur 
-     * active ou d�sactive l'interrupteur
-     * SMART MODE
-     * @param view d�crivant le contexte
-     */
-    public void onToggleSmartModeClicked(View view){
-    	// From http://developer.android.com/guide/topics/ui/controls/togglebutton.html
-    	boolean on = ((Switch) view).isChecked();
-        
-        if (on) {
-            // Enable function
-        	
-        	
-        } else {
-            // Disable function (if already started)
-        	
-        }
-    }
-    
-    public void onToggleTimerModeClicked(View view){
-    	// From http://developer.android.com/guide/topics/ui/controls/togglebutton.html
-    	boolean on = ((Switch) view).isChecked();
-        
-    	
-        if (on) {
-            // Enable function
-        	
-        	Intent timer = new Intent(this, TimerService.class);
-        	// Get the time set by the user
-        	long timeSet = 5000;
-            timer.putExtra(TIME_SET, timeSet);
-            // Launch service
-        	startService(timer);
-        	
-        } else {
-            // Disable function (if already started)
-        	
-        }
-    }
 }

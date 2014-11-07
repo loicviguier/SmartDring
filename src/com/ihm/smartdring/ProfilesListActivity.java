@@ -37,7 +37,7 @@ public class ProfilesListActivity extends Activity {
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, exemple);
 		this.profilesListView.setAdapter(adapter);
 		
-		profilesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+		this.profilesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {

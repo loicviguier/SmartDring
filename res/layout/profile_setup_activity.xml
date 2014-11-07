@@ -19,7 +19,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="5dp"
         android:text="@string/text_view_volume"
-        android:textSize="16sp" />
+        android:textSize="18sp" />
 
     <SeekBar
         android:id="@+id/seekBarVolume"
