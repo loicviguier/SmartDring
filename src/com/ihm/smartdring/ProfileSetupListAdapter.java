@@ -8,11 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 public class ProfileSetupListAdapter extends BaseAdapter {
-	private Boolean[] optionActivate; 
-	private Context context;
+	private Boolean[] optionActivate;
 	private LayoutInflater inflater;
 	
 	private final String[] optionName = {
@@ -27,7 +25,6 @@ public class ProfileSetupListAdapter extends BaseAdapter {
     
     public ProfileSetupListAdapter(Context context, Boolean[] optionActivate) {
 		super();
-		this.context = context;
 		this.optionActivate = optionActivate;
 		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}

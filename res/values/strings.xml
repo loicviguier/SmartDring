@@ -2,8 +2,6 @@
 <resources>
 
     <string name="app_name">SmartDring</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
     <string name="title_activity_profile_setup">New Profile</string>
     <string name="text_view_volume">Volume</string>
     <string name="title_activity_profiles_list">SmartDring</string>

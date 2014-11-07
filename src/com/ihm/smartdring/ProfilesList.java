@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
-import android.provider.OpenableColumns;
 import android.util.Log;
 
 public class ProfilesList {
@@ -65,6 +64,7 @@ public class ProfilesList {
 	/**
 	 * Method used to load the profile list
 	 */
+	@SuppressWarnings("unchecked")
 	public void loadProfilesList() {
 		FileInputStream fis;
 		ObjectInputStream ois;
