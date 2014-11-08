@@ -23,14 +23,14 @@ public class ProfilesListActivity extends Activity {
 	private Intent profileSetupActivity = null;
 	
 	
-	private void showAlertDialogAddProfile() {
+	private void showAlertDialogAddProfile(String title) {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		View profileAddAlertDialogView = inflater.inflate(R.layout.profile_add_alert_dialog, null);
 		AlertDialog.Builder profileAlertDialogBuilder = new AlertDialog.Builder(this);
 		
 		
 		profileAlertDialogBuilder.setView(profileAddAlertDialogView);
-		profileAlertDialogBuilder.setTitle("Creating a new profile");
+		profileAlertDialogBuilder.setTitle(title);
 		
 		profileAlertDialogBuilder.setPositiveButton("Validate", new DialogInterface.OnClickListener() {
 
@@ -69,7 +69,7 @@ public class ProfilesListActivity extends Activity {
 				
 				switch(item.getItemId()) {
 					case R.id.rename_item_popup_menu_profiles_list:
-						showAlertDialogAddProfile();
+						showAlertDialogAddProfile("Rename the profile :");
 						return true;
 					case R.id.modify_item_popup_menu_profiles_list:
 						startActivity(profileSetupActivity);
@@ -132,7 +132,7 @@ public class ProfilesListActivity extends Activity {
 		
 		switch(item.getItemId()) {
 			case R.id.menu_add_profile:
-				this.showAlertDialogAddProfile();
+				this.showAlertDialogAddProfile("Creating a new profile :");
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

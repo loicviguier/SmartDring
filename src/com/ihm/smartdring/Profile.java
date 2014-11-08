@@ -1,11 +1,14 @@
 package com.ihm.smartdring;
 
-public class Profile {
+import java.io.Serializable;
+
+public class Profile implements Serializable {
 	
 	// =============================
 	// Attributes
 	// =============================
 	
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private int volume;
 	private Boolean ambiantSound;
