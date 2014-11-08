@@ -8,5 +8,6 @@
     <string name="text_switch_activate">Activate</string>
     <string name="menu_add_profile">Add a profile</string>
     <string name="menu_discard_profile">Discard the current profile</string>
-
+	<string name="icon_setup_item_description">Detection\'s action icon representation</string>
+	
 </resources>

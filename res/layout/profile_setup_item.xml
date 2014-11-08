@@ -2,32 +2,36 @@
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
-
-    <TableRow>
-        <ImageView 
-            android:id="@+id/iconSetupItem"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
-
-        <TextView
-            android:id="@+id/textSetupItem"
-            android:layout_width="90dp"
-            android:layout_height="70dp"
-            android:gravity="center_vertical"
-            android:textSize="16sp" />
-
-        <Switch
-            android:id="@+id/switchSetupItem"
-            android:layout_gravity="end"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp" />
+	
+	<TableRow >
+	    <ImageView 
+	        android:id="@+id/iconSetupItem"
+	        android:contentDescription="@string/icon_setup_item_description"
+	        android:layout_marginStart="10dp"
+	        android:layout_marginLeft="10dp"
+	        android:layout_marginEnd="5dp"
+	        android:layout_marginRight="5dp"
+	        android:layout_marginTop="10dp"
+	        android:layout_marginBottom="10dp"
+	        android:layout_width="50dp"
+	        android:layout_height="50dp" />
+	
+	    <TextView
+	        android:id="@+id/textSetupItem"
+	        android:layout_width="90dp"
+	        android:layout_height="70dp"
+	        android:gravity="center_vertical"
+	        android:textSize="16sp" />
+	
+	    <Switch
+	        android:id="@+id/switchSetupItem"
+	        android:gravity="center_vertical|end"
+	        android:layout_marginEnd="10dp"
+	        android:layout_marginRight="10dp"
+	        android:layout_marginStart="5dp"
+	        android:layout_marginLeft="5dp"
+	        android:layout_width="fill_parent"
+	        android:layout_height="70dp" />
 	</TableRow>
+	
 </TableLayout>
