@@ -69,7 +69,7 @@ public class ProfilesListActivity extends Activity {
 				
 				switch(item.getItemId()) {
 					case R.id.rename_item_popup_menu_profiles_list:
-						showAlertDialogAddProfile("Rename the profile :");
+						showAlertDialogAddProfile("Rename the profile");
 						return true;
 					case R.id.modify_item_popup_menu_profiles_list:
 						startActivity(profileSetupActivity);
@@ -132,7 +132,7 @@ public class ProfilesListActivity extends Activity {
 		
 		switch(item.getItemId()) {
 			case R.id.menu_add_profile:
-				this.showAlertDialogAddProfile("Creating a new profile :");
+				this.showAlertDialogAddProfile("Create a new profile");
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

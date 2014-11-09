@@ -9,7 +9,7 @@
     <string name="menu_add_profile">Add a profile</string>
     <string name="menu_discard_profile">Discard the current profile</string>
 	<string name="icon_setup_item_description">Detection\'s action icon representation</string>
-	<string name="text_add_alert_dialog">Enter a profile name</string>
+	<string name="text_add_alert_dialog">Enter a profile name :</string>
 	<string name="rename_item_popup_menu_profiles_list">Rename</string>
 	<string name="modify_item_popup_menu_profiles_list">Modify</string>
 	<string name="delete_item_popup_menu_profiles_list">Delete</string>
