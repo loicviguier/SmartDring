@@ -3,11 +3,13 @@ package com.ihm.smartdring;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +23,8 @@ import android.widget.PopupMenu;
 import android.widget.Switch;
 
 public class ProfilesListActivity extends Activity {
+	private static final String TAG = "Profiles list";
+	
 	private Intent profileSetupActivity = null;
 	private Switch profilesListSwitchActivate = null;
 	private ListView profilesListView = null;
@@ -31,10 +35,12 @@ public class ProfilesListActivity extends Activity {
 	private int selectedItemID = -1;
 	
 	
+	@SuppressLint("InflateParams")
 	private void showAlertDialogAddProfile() {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		final View profileAddAlertDialogView = inflater.inflate(R.layout.profiles_list_alert_dialog, null);
 		AlertDialog.Builder profileAlertDialogBuilder = new AlertDialog.Builder(this);
+		profileSetupActivity = new Intent(this, ProfileSetupActivity.class);
 		
 		profileAlertDialogBuilder.setView(profileAddAlertDialogView);
 		profileAlertDialogBuilder.setTitle("Create a new profile");
@@ -43,14 +49,15 @@ public class ProfilesListActivity extends Activity {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				EditText profilesListAlertDialogEditText = (EditText) profileAddAlertDialogView.findViewById(R.id.editTextProfilesListAlertDialog);
+				EditText profilesListAlertDialogEditText =
+						(EditText) profileAddAlertDialogView.findViewById(R.id.editTextProfilesListAlertDialog);
 				String profileName = profilesListAlertDialogEditText.getText().toString();
 				
 				if (! profileName.isEmpty()) {
 					profiles.getProfiles().add(new Profile(profileName));
 					profiles.saveProfilesList();
-					//startActivity(profileSetupActivity); ERREUR QUE JE COMPRENDS PAS!!!!
-					//startActivityForResult(profileSetupActivity, 1);
+					profileSetupActivity.putExtra("itemID", -1);
+					startActivityForResult(profileSetupActivity, 1);
 				} else {
 					showAlertDialogAddProfile();
 				}
@@ -71,6 +78,7 @@ public class ProfilesListActivity extends Activity {
 	}
 	
 	
+	@SuppressLint("InflateParams")
 	private void showAlertDialogRenameProfile() {
 		LayoutInflater inflater = LayoutInflater.from(this);
 		final View profileAddAlertDialogView = inflater.inflate(R.layout.profiles_list_alert_dialog, null);
@@ -83,7 +91,8 @@ public class ProfilesListActivity extends Activity {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				EditText profilesListAlertDialogEditText = (EditText) profileAddAlertDialogView.findViewById(R.id.editTextProfilesListAlertDialog);
+				EditText profilesListAlertDialogEditText =
+						(EditText) profileAddAlertDialogView.findViewById(R.id.editTextProfilesListAlertDialog);
 				String newProfileName = profilesListAlertDialogEditText.getText().toString();
 				
 				if (! newProfileName.isEmpty()) {
@@ -212,7 +221,7 @@ public class ProfilesListActivity extends Activity {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
-				// Changer le profile par defaut
+				//TODO Changer le profile par defaut
 			}
 			
 		});
@@ -233,6 +242,14 @@ public class ProfilesListActivity extends Activity {
 	}
 
 	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(TAG, "resuming");
+		refreshProfilesList();
+	}
+
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.profiles_list, menu);

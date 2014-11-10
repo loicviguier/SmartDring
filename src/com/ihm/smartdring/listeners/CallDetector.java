@@ -16,20 +16,22 @@ public class CallDetector extends BroadcastReceiver {
 	 */
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		boolean activated = false;
+		
 		Intent service = new Intent(context, FlipService.class);
 		Bundle extras = intent.getExtras();
 		String phoneState = extras.getString(TelephonyManager.EXTRA_STATE);
 
 		//TODO Retrieve activation state of the service
-		
-		if (phoneState.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
-			Log.d(TAG, "Call detected, phone state : " + phoneState);
-			context.startService(service);
-		}
-		else {
-			Log.d(TAG, "Call is over or cancelled, phone state : " + phoneState);
-			context.stopService(service);
-		}
+		if(activated)		
+			if (phoneState.equals(TelephonyManager.EXTRA_STATE_RINGING)) {
+				Log.d(TAG, "Call detected, phone state : " + phoneState);
+				context.startService(service);
+			}
+			else {
+				Log.d(TAG, "Call is over or cancelled, phone state : " + phoneState);
+				context.stopService(service);
+			}
 	}
 
 }

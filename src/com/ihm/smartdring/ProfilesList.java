@@ -80,6 +80,7 @@ public class ProfilesList {
 		} catch(Exception ex) {
 			Log.v("Profile List Serialization Read Error : ",ex.getMessage());
 			ex.printStackTrace();
+			this.profiles = null;
 		}
 	}
 	
