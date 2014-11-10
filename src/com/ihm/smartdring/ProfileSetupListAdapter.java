@@ -33,7 +33,7 @@ public class ProfileSetupListAdapter extends BaseAdapter {
 		this.applicationContext = context;
 		this.profileItemID = profileItemID;
 		
-		this.profiles = new ProfilesList(context);
+		this.profiles = new ProfilesList(/* context */);
 		this.profiles.loadProfilesList();
 		
 		Profile setupProfile = profiles.getProfiles().get(profileItemID);
@@ -57,13 +57,11 @@ public class ProfileSetupListAdapter extends BaseAdapter {
 
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
 		return position;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
 		if(convertView == null)
 			convertView = inflater.inflate(R.layout.profile_setup_item, parent, false);
 		
@@ -74,21 +72,28 @@ public class ProfileSetupListAdapter extends BaseAdapter {
 		iconSetupItem.setImageResource(optionIconID[position]);
 		textSetupItemp.setText(optionName[position]);
 		
-		ProfilesList profiles = new ProfilesList(applicationContext);
+		ProfilesList profiles = new ProfilesList(/*applicationContext*/);
 		profiles.loadProfilesList();
 		
 		switch(position) {
 			case 0:
-				switchSetupItem.setChecked(profiles.getProfiles().get(profileItemID).getAmbiantSound());
+				boolean active = profiles.getProfiles().get(profileItemID).getAmbiantSound();
+				//switchSetupItem.setChecked(true);
+				Log.v("Setup:" + position, "state of " +
+						profileItemID +
+						" before switch : " + active);
+				
 				switchSetupItem.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 					
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-						//ProfilesList profiles = new ProfilesList(buttonView.getContext());
-						//profiles.loadProfilesList();
-						Log.v("Setup switch 1:", isChecked?"true":"false");
-						//profiles.getProfiles().get(profileItemID).setAmbiantSound(isChecked);
-						//profiles.saveProfilesList();
+						ProfilesList profiles = new ProfilesList(/*buttonView.getContext()*/);
+						profiles.loadProfilesList();
+						Log.v("Setup switch 1:", "saved before : " + profiles.getProfiles().get(profileItemID).getAmbiantSound());
+						//Log.v("Setup switch 1:", "" + isChecked);
+						profiles.getProfiles().get(profileItemID).setAmbiantSound(isChecked);
+						profiles.saveProfilesList();
+						Log.v("Setup switch 1:", "saved after : " + profiles.getProfiles().get(profileItemID).getAmbiantSound());
 					}
 					
 				});

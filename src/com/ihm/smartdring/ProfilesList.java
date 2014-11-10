@@ -18,7 +18,7 @@ public class ProfilesList {
 
 	private static final String FILENAME = "profiles";
 
-	private Context fileContext;
+	private static Context fileContext;
 	private List<Profile> profiles;
 
 	// =============================
@@ -31,9 +31,20 @@ public class ProfilesList {
 	 */
 	public ProfilesList(Context fileContext) {
 		super();
-		this.fileContext = fileContext;
+		ProfilesList.fileContext = fileContext;
 		this.profiles = new ArrayList<Profile>();
 	}
+	
+	
+	/**
+	 * Construct a new ProfilesList instance with
+	 * the old Context, that should have been set before
+	 */
+	public ProfilesList() {
+		super();
+		this.profiles = new ArrayList<Profile>();
+	}
+	
 
 	// =============================
 	// Methods
@@ -71,7 +82,7 @@ public class ProfilesList {
 		FileInputStream fis;
 		ObjectInputStream ois;
 		
-		Log.v("Profile List Serialization Read : ", "Called");
+		//Log.v("Profile List Serialization Read : ", "Called");
 
 		try {
 			fis = fileContext.getApplicationContext().openFileInput(FILENAME);
