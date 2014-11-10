@@ -84,7 +84,7 @@ public class ProfileSetupListAdapter extends BaseAdapter {
 					
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-						//ProfilesList profiles = new ProfilesList(applicationContext);
+						//ProfilesList profiles = new ProfilesList(buttonView.getContext());
 						//profiles.loadProfilesList();
 						Log.v("Setup switch 1:", isChecked?"true":"false");
 						//profiles.getProfiles().get(profileItemID).setAmbiantSound(isChecked);

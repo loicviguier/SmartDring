@@ -35,7 +35,7 @@ public class ProfileSetupActivity extends Activity {
         this.setupProfile = profiles.getProfiles().get(selectedItemID);
         this.setTitle(setupProfile.getName());
         
-        ProfileSetupListAdapter adapter = new ProfileSetupListAdapter(this.getBaseContext(), selectedItemID);
+        ProfileSetupListAdapter adapter = new ProfileSetupListAdapter(this, selectedItemID);
         this.profileSetupListView.setAdapter(adapter);
     }
 
