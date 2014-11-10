@@ -13,12 +13,14 @@ import android.util.Log;
 
 public class FlipService extends Service implements SensorEventListener {
 	private static final String TAG = "FlipService";
-
-	private int userSetting;
+	
 	private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private Sensor myMagnetic;
+    
     private AudioManager myAudioManager;
+    
+	private int userSetting;
     private float[] accelerometerMatrix = new float[3];
 	private float[] magneticsMatrix = new float[3];
 	private float[] mOrientation = new float[3];
