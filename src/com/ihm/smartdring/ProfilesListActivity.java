@@ -14,30 +14,46 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.PopupMenu.OnMenuItemClickListener;
+import android.widget.Switch;
 
 public class ProfilesListActivity extends Activity {
 	private Intent profileSetupActivity = null;
+	private Switch profilesListSwitchActivate = null;
+	private ListView profilesListView = null;
+	private ArrayAdapter<String> adapter = null;
+	
+	private List<String> profilesListName;
+	private ProfilesList profiles = null;
+	private int selectedItemID = -1;
 	
 	
-	private void showAlertDialogAddProfile(String title) {
+	private void showAlertDialogAddProfile() {
 		LayoutInflater inflater = LayoutInflater.from(this);
-		View profileAddAlertDialogView = inflater.inflate(R.layout.profile_add_alert_dialog, null);
+		final View profileAddAlertDialogView = inflater.inflate(R.layout.profiles_list_alert_dialog, null);
 		AlertDialog.Builder profileAlertDialogBuilder = new AlertDialog.Builder(this);
 		
-		
 		profileAlertDialogBuilder.setView(profileAddAlertDialogView);
-		profileAlertDialogBuilder.setTitle(title);
+		profileAlertDialogBuilder.setTitle("Create a new profile");
 		
 		profileAlertDialogBuilder.setPositiveButton("Validate", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				startActivity(profileSetupActivity);
-				// Ajouter new item profile et faire passer a la vue suivante 
+				EditText profilesListAlertDialogEditText = (EditText) profileAddAlertDialogView.findViewById(R.id.editTextProfilesListAlertDialog);
+				String profileName = profilesListAlertDialogEditText.getText().toString();
+				
+				if (! profileName.isEmpty()) {
+					profiles.getProfiles().add(new Profile(profileName));
+					profiles.saveProfilesList();
+					//startActivity(profileSetupActivity); ERREUR QUE JE COMPRENDS PAS!!!!
+					//startActivityForResult(profileSetupActivity, 1);
+				} else {
+					showAlertDialogAddProfile();
+				}
 			}
 
 		});
@@ -55,28 +71,73 @@ public class ProfilesListActivity extends Activity {
 	}
 	
 	
-	private void showPopupMenuProfilesItem(View view, int position) {
+	private void showAlertDialogRenameProfile() {
+		LayoutInflater inflater = LayoutInflater.from(this);
+		final View profileAddAlertDialogView = inflater.inflate(R.layout.profiles_list_alert_dialog, null);
+		AlertDialog.Builder profileAlertDialogBuilder = new AlertDialog.Builder(this);
+		
+		profileAlertDialogBuilder.setView(profileAddAlertDialogView);
+		profileAlertDialogBuilder.setTitle("Rename the profile");
+		
+		profileAlertDialogBuilder.setPositiveButton("Validate", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				EditText profilesListAlertDialogEditText = (EditText) profileAddAlertDialogView.findViewById(R.id.editTextProfilesListAlertDialog);
+				String newProfileName = profilesListAlertDialogEditText.getText().toString();
+				
+				if (! newProfileName.isEmpty()) {
+					profiles.getProfiles().get(selectedItemID).setName(newProfileName);
+					profiles.saveProfilesList();
+					refreshProfilesList();
+					selectedItemID = -1;
+				} else {
+					showAlertDialogRenameProfile();
+				}
+			}
+
+		});
+
+		profileAlertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				selectedItemID = -1;
+				dialog.cancel();
+			}
+
+		});
+		
+		profileAlertDialogBuilder.show();
+	}
+	
+	
+	private void showPopupMenuProfilesItem(View view) {
 		PopupMenu popupMenuProfileItem; 
 		
 		popupMenuProfileItem = new PopupMenu(this, view);
 		popupMenuProfileItem.getMenuInflater().inflate(R.menu.popup_menu_profiles_list_item, 
 				popupMenuProfileItem.getMenu());
 		
-		popupMenuProfileItem.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+		popupMenuProfileItem.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 			
 			@Override
 			public boolean onMenuItemClick(MenuItem item) {
 				
 				switch(item.getItemId()) {
 					case R.id.rename_item_popup_menu_profiles_list:
-						showAlertDialogAddProfile("Rename the profile");
+						showAlertDialogRenameProfile();
 						return true;
-					case R.id.modify_item_popup_menu_profiles_list:
+					case R.id.modify_item_popup_menu_profiles_list: 
+						profileSetupActivity.putExtra("itemID", selectedItemID);
 						startActivity(profileSetupActivity);
-						// Faire passer le profile à la vue
+						selectedItemID = -1;
 						return true;
 					case R.id.delete_item_popup_menu_profiles_list:
-						// Action supprimer profile
+						profiles.getProfiles().remove(selectedItemID);
+						profiles.saveProfilesList();
+						refreshProfilesList();
+						selectedItemID = -1;
 						return true;
 					default:
 						return true;
@@ -88,35 +149,87 @@ public class ProfilesListActivity extends Activity {
 		
 		popupMenuProfileItem.show();
 	}
+	
+	
+	private void refreshProfilesList() {
+		profilesListName = new ArrayList<String>();
+		for(int index = 0; index < profiles.getProfiles().size(); index++) {
+			profilesListName.add(profiles.getProfiles().get(index).getName());
+		}
 
+		adapter = new ArrayAdapter<String>(ProfilesListActivity.this, android.R.layout.simple_list_item_single_choice, profilesListName);
+		profilesListView.setAdapter(adapter);
+		adapter.notifyDataSetChanged();
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		switch (requestCode) {
+			case 1:
+				refreshProfilesList();
+				break;
+			default:
+				break;
+		}
+	}
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.profiles_list_activity);
+				
+		this.profiles = new ProfilesList(this.getApplicationContext());
+		this.profileSetupActivity = new Intent(this, ProfileSetupActivity.class);
 		
-		profileSetupActivity = new Intent(this, ProfileSetupActivity.class);
+		this.profilesListSwitchActivate = (Switch) findViewById(R.id.switchActivate);
+		this.profilesListView = (ListView) findViewById(R.id.listViewProfiles);
 		
-		ListView profilesListView = (ListView) findViewById(R.id.listViewProfiles);
+		this.profiles.loadProfilesList();
 		
-		List<String> exemple = new ArrayList<String>();
-		exemple.add("Home");
-		exemple.add("Work");
-		exemple.add("Sport");
+		this.profilesListName = new ArrayList<String>();
+		for(int index = 0; index < profiles.getProfiles().size(); index++) {
+			this.profilesListName.add(profiles.getProfiles().get(index).getName());
+		}
 		
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, exemple);
-		profilesListView.setAdapter(adapter);
+		this.adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_single_choice, this.profilesListName);
+		this.profilesListView.setAdapter(this.adapter);
 		
-		profilesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+		this.profilesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View view, int position, long id) {
-				showPopupMenuProfilesItem(view, position);
+				selectedItemID = position;
+				showPopupMenuProfilesItem(view);
 				return true;
 			}
 			
 		});
 		
+		this.profilesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
+				// Changer le profile par defaut
+			}
+			
+		});
+		
+		this.profilesListSwitchActivate.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					// The toggle is enabled
+				} else {
+					// The toggle is disabled
+				}
+
+			}
+
+		});
 	}
 
 	
@@ -132,7 +245,7 @@ public class ProfilesListActivity extends Activity {
 		
 		switch(item.getItemId()) {
 			case R.id.menu_add_profile:
-				this.showAlertDialogAddProfile("Create a new profile");
+				this.showAlertDialogAddProfile();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);

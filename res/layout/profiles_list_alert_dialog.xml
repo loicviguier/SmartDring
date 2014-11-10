@@ -5,17 +5,17 @@
     android:padding="15dp" >
     
     <TextView
-        android:id="@+id/textAddProfileAlertDialog"
+        android:id="@+id/textProfilesListAlertDialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="10dip"
         android:text="@string/text_add_alert_dialog" />
 
     <EditText
-        android:id="@+id/editTextAddProfileAlertDialog"
+        android:id="@+id/editTextProfilesListAlertDialog"
         android:inputType="text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textAddProfileAlertDialog" />
+        android:layout_below="@id/textProfilesListAlertDialog" />
 		
 </RelativeLayout>

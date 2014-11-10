@@ -6,6 +6,7 @@
 	<TableRow >
 	    <ImageView 
 	        android:id="@+id/iconSetupItem"
+	        android:layout_weight="1"
 	        android:contentDescription="@string/icon_setup_item_description"
 	        android:layout_marginStart="10dp"
 	        android:layout_marginLeft="10dp"
@@ -18,6 +19,7 @@
 	
 	    <TextView
 	        android:id="@+id/textSetupItem"
+	        android:layout_weight="2"
 	        android:layout_width="90dp"
 	        android:layout_height="70dp"
 	        android:gravity="center_vertical"
@@ -25,13 +27,16 @@
 	
 	    <Switch
 	        android:id="@+id/switchSetupItem"
+	        android:layout_weight="2"
 	        android:gravity="center_vertical|end"
 	        android:layout_marginEnd="10dp"
 	        android:layout_marginRight="10dp"
 	        android:layout_marginStart="5dp"
 	        android:layout_marginLeft="5dp"
-	        android:layout_width="fill_parent"
-	        android:layout_height="70dp" />
+	        android:layout_width="match_parent"
+	        android:layout_height="70dp"
+	        android:textOn="@string/text_switch_on"
+	        android:textOff="@string/text_switch_off" />
 	</TableRow>
 	
 </TableLayout>

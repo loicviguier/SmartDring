@@ -10,7 +10,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 public class ProfileSetupListAdapter extends BaseAdapter {
-	private Boolean[] optionActivate;
+	private boolean[] optionActivate;
 	private LayoutInflater inflater;
 	
 	private final String[] optionName = {
@@ -23,7 +23,7 @@ public class ProfileSetupListAdapter extends BaseAdapter {
 			R.drawable.ic_walking, 
 			R.drawable.ic_reverse_phone};
     
-    public ProfileSetupListAdapter(Context context, Boolean[] optionActivate) {
+    public ProfileSetupListAdapter(Context context, boolean[] optionActivate) {
 		super();
 		this.optionActivate = optionActivate;
 		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -59,7 +59,7 @@ public class ProfileSetupListAdapter extends BaseAdapter {
 		
 		iconSetupItem.setImageResource(optionIconID[position]);
 		textSetupItemp.setText(optionName[position]);
-		switchSetupItem.setActivated(optionActivate[position]);
+		switchSetupItem.setChecked(optionActivate[position]);
 		
 		return convertView;
 	}

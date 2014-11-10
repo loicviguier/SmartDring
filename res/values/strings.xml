@@ -13,5 +13,7 @@
 	<string name="rename_item_popup_menu_profiles_list">Rename</string>
 	<string name="modify_item_popup_menu_profiles_list">Modify</string>
 	<string name="delete_item_popup_menu_profiles_list">Delete</string>
+	<string name="text_switch_on"> ON  </string>
+	<string name="text_switch_off"> OFF </string>
 	
 </resources>

@@ -82,4 +82,22 @@ public class ProfilesList {
 			ex.printStackTrace();
 		}
 	}
+	
+	// =============================
+	// Getter / Setter
+	// =============================
+	
+	/**
+	 * @return the profiles
+	 */
+	public List<Profile> getProfiles() {
+		return profiles;
+	}
+
+	/**
+	 * @param profiles the profiles to set
+	 */
+	public void setProfiles(List<Profile> profiles) {
+		this.profiles = profiles;
+	}
 }

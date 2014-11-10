@@ -1,6 +1,7 @@
 package com.ihm.smartdring;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,19 +12,35 @@ import android.widget.ListView;
 
 public class ProfileSetupActivity extends Activity {
 	private ListView profileSetupListView = null;
-	
-	private void initialize() {
-		this.profileSetupListView = (ListView) findViewById(R.id.listViewSetupProfile);
-	}
+	private ProfilesList profiles = null;
+	private Profile setupProfile = null;
+	private int selectedItemID = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.profile_setup_activity);
         
-        this.initialize();
+        this.profileSetupListView = (ListView) findViewById(R.id.listViewSetupProfile);
+        this.profiles = new ProfilesList(this.getApplicationContext());
+        this.profiles.loadProfilesList();
         
-        Boolean[] exemple = {true, false, false};
+        Bundle bunble  = this.getIntent().getExtras();
+        this.selectedItemID = bunble.getInt("itemID", -1);
+        
+        if(this.selectedItemID != -1) {
+        	this.setupProfile = profiles.getProfiles().get(this.selectedItemID);
+        } else {
+        	int lastElement = profiles.getProfiles().size() -1;
+        	this.setupProfile = profiles.getProfiles().get(lastElement);
+        }
+        
+        this.setTitle(setupProfile.getName());
+        
+        boolean[] exemple = {
+        		setupProfile.getAmbiantSound(),
+        		setupProfile.getWalkingAction(), 
+        		setupProfile.getAmbiantSound()};
         
         ProfileSetupListAdapter adapter = new ProfileSetupListAdapter(this, exemple);
         this.profileSetupListView.setAdapter(adapter);
@@ -41,24 +58,34 @@ public class ProfileSetupActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.ring_setup, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         
     	switch(item.getItemId()) {
 			case R.id.menu_discard_profile:
+				if(this.selectedItemID != -1) {
+		        	this.setupProfile = profiles.getProfiles().remove(this.selectedItemID);
+		        } else {
+		        	int lastElement = profiles.getProfiles().size() - 1;
+		        	this.setupProfile = profiles.getProfiles().remove(lastElement);
+		        }
+				profiles.saveProfilesList();
+				
+				//ProfilesListActivity parent = (ProfilesListActivity) this.getParent();
+				//parent.refreshProfilesList();
+				//Intent returnIntent = new Intent();
+				//setResult(RESULT_OK, returnIntent);
 				finish();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
     	}
     }
+    
+    
     
 }
