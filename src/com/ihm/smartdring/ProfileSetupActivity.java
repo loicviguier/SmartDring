@@ -42,26 +42,24 @@ public class ProfileSetupActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.ring_setup, menu);
+        //getMenuInflater().inflate(R.menu.profile_setup, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        
-    	switch(item.getItemId()) {
-			case R.id.menu_discard_profile:
-				this.setupProfile = profiles.getProfiles().remove(selectedItemID);
-				profiles.saveProfilesList();
-				Intent returnIntent = new Intent();
-				setResult(1, returnIntent);
-				finish();
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-    	}
+//    	switch(item.getItemId()) {
+//			case R.id.menu_discard_profile:
+//				this.setupProfile = profiles.getProfiles().remove(selectedItemID);
+//				profiles.saveProfilesList();
+//				Intent returnIntent = new Intent();
+//				setResult(1, returnIntent);
+//				finish();
+//				return true;
+//			default:
+//				return super.onOptionsItemSelected(item);
+//    	}
+    	return super.onOptionsItemSelected(item);
     }
-    
-    
     
 }

@@ -74,7 +74,8 @@ public class ProfilesListActivity extends Activity {
 					profiles.getProfiles().add(new Profile(profileName));
 					profiles.saveProfilesList();
 					profileSetupActivity.putExtra("itemID", -1);
-					startActivityForResult(profileSetupActivity, 1);
+					//startActivityForResult(profileSetupActivity, 1);
+					startActivity(profileSetupActivity);
 				} else {
 					showAlertDialogAddProfile();
 				}
