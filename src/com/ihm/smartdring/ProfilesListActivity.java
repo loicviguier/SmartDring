@@ -213,38 +213,16 @@ public class ProfilesListActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.profiles_list_activity);
 		
-		this.settings = getPreferences(MODE_PRIVATE);
-		this.editor = settings.edit();
-		if (!settings.contains(tagApplicationIsOn))
-			// Default value set on the first launch
-			editor.putBoolean(tagApplicationIsOn, false);
-		
-		if (!settings.contains(tagChosenProfile))
-			// Default value set on the first launch
-			editor.putInt(tagChosenProfile, -1);
-		
-		if (!settings.contains(tagMaxAuthorizedVolume)) {
-			if (settings.getInt(tagChosenProfile, -1) != -1) {
-				int volume = profiles.getProfiles()
-						.get(settings.getInt(tagChosenProfile, -1)).getVolume();
-				editor.putInt(tagMaxAuthorizedVolume, volume);
-				editor.commit();
-			}
-			else {
-				editor.putInt(tagMaxAuthorizedVolume, 50);
-				editor.commit();
-			}
-		}	
-		
 		this.profiles = new ProfilesList(this.getApplicationContext());
+		this.profiles.loadProfilesList();
 		this.profileSetupActivity = new Intent(this, ProfileSetupActivity.class);
 		this.walkDetectorService = new Intent(this, WalkDetectorService.class);
 		this.ambientVolumeDetectorService = new Intent(this, AmbientVolumeDetectorService.class);
+		this.settings = getPreferences(MODE_PRIVATE);
+		this.editor = settings.edit();
 		
 		this.profilesListSwitchActivate = (Switch) findViewById(R.id.switchActivate);
 		this.profilesListView = (ListView) findViewById(R.id.listViewProfiles);
-		
-		this.profiles.loadProfilesList();
 		
 		this.profilesListName = new ArrayList<String>();
 		for(int index = 0; index < profiles.getProfiles().size(); index++) {
@@ -274,7 +252,6 @@ public class ProfilesListActivity extends Activity {
 		    	profilesListView.setItemChecked(chosenProfile, true);
 		    }
 		});
-		
 		this.profilesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
 			@Override
@@ -318,12 +295,30 @@ public class ProfilesListActivity extends Activity {
 			}
 
 		});
+		
+		if (!settings.contains(tagApplicationIsOn))
+			// Default value set on the first launch
+			editor.putBoolean(tagApplicationIsOn, false);
+		
+		if (!settings.contains(tagChosenProfile))
+			// Default value set on the first launch
+			editor.putInt(tagChosenProfile, -1);
+		
 	}
 
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
+		final int chosenProfile = settings.getInt(tagChosenProfile, -1);
+		Log.d(TAG, "radio button " + chosenProfile + " to be set on startup");
+		// Set the last user's choice of profile
+		this.profilesListView.post(new Runnable() {
+		    @Override
+		    public void run() {
+		    	profilesListView.setItemChecked(chosenProfile, true);
+		    }
+		});
 		refreshProfilesList();
 	}
 
@@ -362,6 +357,7 @@ public class ProfilesListActivity extends Activity {
 					profiles.getProfiles().get(profile).getFlipToSilence();
 			boolean walkDetector = 
 					profiles.getProfiles().get(profile).getWalkingAction();
+			int volume = profiles.getProfiles().get(profile).getVolume();
 			
 			Log.d(TAG, "Ambient sound = " + ambientSound + ", flip = "
 					+ flipToSilent + ", walk = " + walkDetector);
@@ -371,8 +367,10 @@ public class ProfilesListActivity extends Activity {
 			if (walkDetector)
 				startService(walkDetectorService);
 
+			editor.putInt(tagMaxAuthorizedVolume, volume);
 			editor.putBoolean(tagAmbientVolumeIsOn, ambientSound);
 			editor.putBoolean(tagFlipIsOn, flipToSilent);
+			editor.commit();
 		}
 	}
 }
