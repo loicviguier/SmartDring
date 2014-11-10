@@ -13,8 +13,9 @@ import android.widget.TextView;
 
 public class ProfileSetupListAdapter extends BaseAdapter {
 	private ProfilesList profiles = null;
-	private Profile setupProfile = null;
-	private LayoutInflater inflater;
+	private LayoutInflater inflater = null;
+	private Context applicationContext = null;
+	private int profileItemID = -1;
 	
 	private final String[] optionName = {
 			"Ambiant vol.", 
@@ -29,11 +30,13 @@ public class ProfileSetupListAdapter extends BaseAdapter {
     public ProfileSetupListAdapter(Context context, int profileItemID) {
 		super();
 		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		this.applicationContext = context;
+		this.profileItemID = profileItemID;
 		
 		this.profiles = new ProfilesList(context);
 		this.profiles.loadProfilesList();
-		this.setupProfile = profiles.getProfiles().get(profileItemID);
 		
+		Profile setupProfile = profiles.getProfiles().get(profileItemID);
 		Log.v("Names", setupProfile.getName());
 		Log.v("Noise", setupProfile.getFlipToSilence()?"true":"false");
 		Log.v("Walking", setupProfile.getWalkingAction()?"true":"false");
@@ -71,14 +74,20 @@ public class ProfileSetupListAdapter extends BaseAdapter {
 		iconSetupItem.setImageResource(optionIconID[position]);
 		textSetupItemp.setText(optionName[position]);
 		
+		ProfilesList profiles = new ProfilesList(applicationContext);
+		profiles.loadProfilesList();
+		
 		switch(position) {
 			case 0:
+				switchSetupItem.setChecked(profiles.getProfiles().get(profileItemID).getAmbiantSound());
 				switchSetupItem.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 					
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+						//ProfilesList profiles = new ProfilesList(applicationContext);
+						//profiles.loadProfilesList();
 						Log.v("Setup switch 1:", isChecked?"true":"false");
-						//setupProfile.setAmbiantSound(isChecked);
+						//profiles.getProfiles().get(profileItemID).setAmbiantSound(isChecked);
 						//profiles.saveProfilesList();
 					}
 					
@@ -86,12 +95,15 @@ public class ProfileSetupListAdapter extends BaseAdapter {
 				break;
 			
 			case 1:
+				switchSetupItem.setChecked(profiles.getProfiles().get(profileItemID).getWalkingAction());
 				switchSetupItem.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 					
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+						//ProfilesList profiles = new ProfilesList(applicationContext);
+						//profiles.loadProfilesList();
 						Log.v("Setup switch 2:", isChecked?"true":"false");
-						//setupProfile.setWalkingAction(isChecked);
+						//profiles.getProfiles().get(profileItemID).setWalkingAction(isChecked);
 						//profiles.saveProfilesList();
 					}
 					
@@ -99,13 +111,15 @@ public class ProfileSetupListAdapter extends BaseAdapter {
 				break;
 			
 			case 2:
-				switchSetupItem.setChecked(setupProfile.getFlipToSilence());
+				switchSetupItem.setChecked(profiles.getProfiles().get(profileItemID).getFlipToSilence());
 				switchSetupItem.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 					
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+						//ProfilesList profiles = new ProfilesList(applicationContext);
+						//profiles.loadProfilesList();
 						Log.v("Setup switch 3:", isChecked?"true":"false");
-						//setupProfile.setFlipToSilence(isChecked);
+						//profiles.getProfiles().get(profileItemID).setFlipToSilence(isChecked);
 						//profiles.saveProfilesList();
 					}
 					
@@ -113,7 +127,6 @@ public class ProfileSetupListAdapter extends BaseAdapter {
 				break;
 			
 			default:
-				switchSetupItem.setChecked(false);
 				break;
 		}
 		

@@ -45,6 +45,8 @@ public class ProfilesList {
 	public void saveProfilesList(){
 		FileOutputStream fos;
 		ObjectOutputStream oos;
+		
+		Log.v("Profile List Serialization Write : ", "Called");
 
 		try {
 			fos = fileContext.getApplicationContext().openFileOutput(FILENAME, Context.MODE_PRIVATE);
@@ -68,6 +70,8 @@ public class ProfilesList {
 	public void loadProfilesList() {
 		FileInputStream fis;
 		ObjectInputStream ois;
+		
+		Log.v("Profile List Serialization Read : ", "Called");
 
 		try {
 			fis = fileContext.getApplicationContext().openFileInput(FILENAME);
