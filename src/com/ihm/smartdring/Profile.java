@@ -11,9 +11,9 @@ public class Profile implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String name;
 	private int volume;
-	private Boolean ambiantSound;
-	private Boolean walkingAction;
-	private Boolean flipToSilence;
+	private boolean ambiantSound;
+	private boolean walkingAction;
+	private boolean flipToSilence;
 	
 	// =============================
 	// Constructor
@@ -67,42 +67,42 @@ public class Profile implements Serializable {
 	/**
 	 * @return the ambiantSound
 	 */
-	public Boolean getAmbiantSound() {
+	public boolean getAmbiantSound() {
 		return ambiantSound;
 	}
 
 	/**
 	 * @param ambiantSound the ambiantSound to set
 	 */
-	public void setAmbiantSound(Boolean ambiantSound) {
+	public void setAmbiantSound(boolean ambiantSound) {
 		this.ambiantSound = ambiantSound;
 	}
 
 	/**
 	 * @return the walkingAction
 	 */
-	public Boolean getWalkingAction() {
+	public boolean getWalkingAction() {
 		return walkingAction;
 	}
 
 	/**
 	 * @param walkingAction the walkingAction to set
 	 */
-	public void setWalkingAction(Boolean walkingAction) {
+	public void setWalkingAction(boolean walkingAction) {
 		this.walkingAction = walkingAction;
 	}
 
 	/**
 	 * @return the flipToSilence
 	 */
-	public Boolean getFlipToSilence() {
+	public boolean getFlipToSilence() {
 		return flipToSilence;
 	}
 
 	/**
 	 * @param flipToSilence the flipToSilence to set
 	 */
-	public void setFlipToSilence(Boolean flipToSilence) {
+	public void setFlipToSilence(boolean flipToSilence) {
 		this.flipToSilence = flipToSilence;
 	}
 	

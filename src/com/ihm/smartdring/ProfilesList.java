@@ -78,9 +78,9 @@ public class ProfilesList {
 			ois.close();
 
 		} catch(Exception ex) {
+			this.profiles = new ArrayList<Profile>();
 			Log.v("Profile List Serialization Read Error : ",ex.getMessage());
 			ex.printStackTrace();
-			this.profiles = null;
 		}
 	}
 	
