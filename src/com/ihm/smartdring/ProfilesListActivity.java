@@ -32,8 +32,11 @@ public class ProfilesListActivity extends Activity {
 	
 	// SharedPreferences elements
 	private final String tagApplicationIsOn = "com.ihm.smartdring.tagapplicationison";
-	private final String tagFlipIsOn = "com.ihm.smartdring.tagflipison";
 	private final String tagChosenProfile = "com.ihm.smartdring.tagchosenprofile";
+	private final String tagMaxAuthorizedVolume = "com.ihm.smartdring.tagmaxauthorizedvolume";
+	private final String tagFlipIsOn = "com.ihm.smartdring.tagflipison";
+	private final String tagAmbientVolumeIsOn = "com.ihm.smartdring.tagambientvolumeison";
+	
 	private SharedPreferences settings;
 	private Editor editor;
 	
@@ -220,6 +223,19 @@ public class ProfilesListActivity extends Activity {
 			// Default value set on the first launch
 			editor.putInt(tagChosenProfile, -1);
 		
+		if (!settings.contains(tagMaxAuthorizedVolume)) {
+			if (settings.getInt(tagChosenProfile, -1) != -1) {
+				int volume = profiles.getProfiles()
+						.get(settings.getInt(tagChosenProfile, -1)).getVolume();
+				editor.putInt(tagMaxAuthorizedVolume, volume);
+				editor.commit();
+			}
+			else {
+				editor.putInt(tagMaxAuthorizedVolume, 50);
+				editor.commit();
+			}
+		}	
+		
 		this.profiles = new ProfilesList(this.getApplicationContext());
 		this.profileSetupActivity = new Intent(this, ProfileSetupActivity.class);
 		this.walkDetectorService = new Intent(this, WalkDetectorService.class);
@@ -266,6 +282,9 @@ public class ProfilesListActivity extends Activity {
 				Log.d(TAG, "radio button " + position + " checked");
 				// Update SharedPreferences
 				editor.putInt(tagChosenProfile, position);
+				int volume = profiles.getProfiles()
+						.get(position).getVolume();
+				editor.putInt(tagMaxAuthorizedVolume, volume);
 		        editor.commit();
 				
 				boolean activated = settings.getBoolean(tagApplicationIsOn, false);
@@ -351,9 +370,9 @@ public class ProfilesListActivity extends Activity {
 				startService(ambientVolumeDetectorService);
 			if (walkDetector)
 				startService(walkDetectorService);
-			
+
+			editor.putBoolean(tagAmbientVolumeIsOn, ambientSound);
 			editor.putBoolean(tagFlipIsOn, flipToSilent);
-				
 		}
 	}
 }

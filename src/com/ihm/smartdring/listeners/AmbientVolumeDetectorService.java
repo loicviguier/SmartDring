@@ -24,7 +24,14 @@ import android.util.Log;
  * @author Guillaume
  */
 public class AmbientVolumeDetectorService extends Service {
-	private final String tagAmbientVolumeOn = "com.example.testambientvolume.tagambientvolumeon";
+	private final int MILLISECONDS_IN_A_SECOND = 1000;
+	private final int DELAY_IN_SECONDS = 10;
+	private final int DELAY =
+			MILLISECONDS_IN_A_SECOND * DELAY_IN_SECONDS;
+	
+	private final String tagAmbientVolumeIsOn = "com.ihm.smartdring.tagambientvolumeison";
+	private final String tagMaxAuthorizedVolume = "com.ihm.smartdring.tagmaxauthorizedvolume";
+	
 	private SharedPreferences settings;
 	private static final String TAG = "AmbientVolumeDetector";
 	private NotificationManager mNM;
@@ -32,32 +39,40 @@ public class AmbientVolumeDetectorService extends Service {
 	private Handler myHandler;
 	private int maxAmplitude;
 	private AudioManager myAudioManager;
-	private int userRingerMode;
+	private int userRingerVolume;
 	
 	private Runnable myRunnable = new Runnable() {
 		@Override
 		public void run() {
-			//TODO Retrieve activation
-			boolean activated = settings.getBoolean(tagAmbientVolumeOn, true);
-			long delay = 10000;
+			boolean activated = settings.getBoolean(tagAmbientVolumeIsOn, true);
 			
 			// While we are active
 			if(activated) {
 				maxAmplitude = myRecorder.getMaxAmplitude();
 				
-				//TODO retrieve max authorized volume
-				int maxVolume = myAudioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
-				int newVolume = maxAmplitude * 100 / 32767;
+				int maxSystemVolume =
+						myAudioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
+				float maxAuthorizedVolume =
+						settings.getInt(tagMaxAuthorizedVolume, 50);
+				maxAuthorizedVolume = Math.round(
+						maxSystemVolume * maxAuthorizedVolume / 100);
+				int newVolume = Math.round((maxAmplitude / 32767) * maxAuthorizedVolume);
+				
+				newVolume = newVolume > (int) maxSystemVolume ?
+						maxSystemVolume : newVolume;
 				// Volume is at least = 1
-				newVolume = 1 + Math.round(newVolume * maxVolume / 100);
+				newVolume = newVolume == 0 ?
+						1 : newVolume;
 				
-				Log.d(TAG, "[Service] : Tick, amplitude = " + maxAmplitude + ", new volume = " + newVolume);
 				
-				myAudioManager.setStreamVolume(AudioManager.STREAM_RING, newVolume, 0);
-				myAudioManager.setStreamVolume(AudioManager.STREAM_NOTIFICATION, newVolume, 0);
+				Log.d(TAG, "[Service] : Tick, amplitude = "
+						+ maxAmplitude + ", new volume = " + newVolume);
+				
+				myAudioManager.setStreamVolume(
+						AudioManager.STREAM_RING, newVolume, 0);
 				
 				// Repetition of the task
-				myHandler.postDelayed(myRunnable, delay);
+				myHandler.postDelayed(myRunnable, DELAY);
 			}
 			else {
 				// Stops the service
@@ -79,7 +94,8 @@ public class AmbientVolumeDetectorService extends Service {
 		mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 		myHandler = new Handler();
 		myAudioManager = (AudioManager) this.getSystemService(Context.AUDIO_SERVICE);
-		userRingerMode = myAudioManager.getRingerMode();
+		userRingerVolume =
+				myAudioManager.getStreamVolume(AudioManager.STREAM_RING);
 		settings = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		initializeRecorder();
@@ -87,7 +103,8 @@ public class AmbientVolumeDetectorService extends Service {
         
         myHandler.post(myRunnable);
         
-        Log.d(TAG, "[ServiceAmbientVolume] : Runnable lancé. Booléen = " + settings.getBoolean(tagAmbientVolumeOn, true));
+        Log.d(TAG, "[ServiceAmbientVolume] : Runnable lancé. Booléen = "
+        		+ settings.getBoolean(tagAmbientVolumeIsOn, true));
         
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
@@ -99,7 +116,8 @@ public class AmbientVolumeDetectorService extends Service {
     public void onDestroy() {
 		myRecorder.stop();
 		myHandler.removeCallbacks(myRunnable);
-		myAudioManager.setRingerMode(userRingerMode);
+		myAudioManager.setStreamVolume(
+				AudioManager.STREAM_RING, userRingerVolume, 0);
 	}
 	
 	
@@ -138,32 +156,12 @@ public class AmbientVolumeDetectorService extends Service {
 		int notifID = 1;
 
         // Set the icon, scrolling text and timestamp
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
+        NotificationCompat.Builder mBuilder =
+        		new NotificationCompat.Builder(this);
         
         mBuilder.setSmallIcon(com.ihm.smartdring.R.drawable.ic_launcher);
         mBuilder.setContentTitle("Erreur");
         mBuilder.setContentText("Le micro est inaccessible.");
-
-        /*
-        // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this, MainActivity.class);
-
-        // The stack builder object will contain an artificial back stack for the
-        // started Activity.
-        // This ensures that navigating backward from the Activity leads out of
-        // your application to the Home screen.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(MainActivity.class);
-        // Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                    0,
-                    PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
-        */
 
         // Send the notification.
         mNM.notify(notifID, mBuilder.build());

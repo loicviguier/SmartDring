@@ -4,7 +4,10 @@ import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.util.Log;
 
 /**
@@ -14,6 +17,13 @@ import android.util.Log;
  */
 public class ActivityRecognitionIntentService extends IntentService {
 	private static final String TAG = "ActivityRecognitionIntentService";
+	
+	private final String tagMaxAuthorizedVolume = "com.ihm.smartdring.tagmaxauthorizedvolume";
+	
+	private AudioManager myAudioManager;
+	private SharedPreferences settings;
+	private int maxAuthorizedVolume;
+	private int maxSystemVolume;
 	
 	public ActivityRecognitionIntentService() {
 		super("ActivityRecognitionIntentService");
@@ -25,7 +35,13 @@ public class ActivityRecognitionIntentService extends IntentService {
 		
 		// If the incoming intent contains an update
         if (ActivityRecognitionResult.hasResult(intent)) {
-        	Log.d(TAG, "Computing result");
+        	myAudioManager = (AudioManager)
+        			getSystemService(Context.AUDIO_SERVICE);
+        	maxSystemVolume =
+        			myAudioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
+        	maxAuthorizedVolume =
+        			settings.getInt(tagMaxAuthorizedVolume, 50);
+        	
             // Get the update
             ActivityRecognitionResult result =
                     ActivityRecognitionResult.extractResult(intent);
@@ -54,17 +70,27 @@ public class ActivityRecognitionIntentService extends IntentService {
             	switch(activityType) {
                 case DetectedActivity.ON_BICYCLE:
                 case DetectedActivity.ON_FOOT:
-                	// Increase volume
-                	//TODO retrieve max authorized volume
+                	// Increase volume on maximum
+                	int newVolume =
+                		maxAuthorizedVolume * maxSystemVolume / 100;
+                	
+                	newVolume = newVolume > (int) maxSystemVolume ?
+    						maxSystemVolume : newVolume;
+    				
+                	myAudioManager.setStreamVolume(
+    						AudioManager.STREAM_RING, newVolume, 0);
                 	
                 	break;
                 case DetectedActivity.STILL:
                 case DetectedActivity.UNKNOWN:
                 case DetectedActivity.TILTING:
                 case DetectedActivity.IN_VEHICLE:
-                	// Set the user's préférences back
-                	//TODO Set the user's préférences back
-                	
+                	// Set an average volume
+                	int newAverageVolume =
+            			maxAuthorizedVolume * maxSystemVolume / 150;
+            	
+	            	myAudioManager.setStreamVolume(
+							AudioManager.STREAM_RING, newAverageVolume, 0);
                 	break;
             	}
             }
