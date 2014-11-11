@@ -25,7 +25,7 @@ import android.util.Log;
  */
 public class AmbientVolumeDetectorService extends Service {
 	private final int MILLISECONDS_IN_A_SECOND = 1000;
-	private final int DELAY_IN_SECONDS = 10;
+	private final int DELAY_IN_SECONDS = 25;
 	private final int DELAY =
 			MILLISECONDS_IN_A_SECOND * DELAY_IN_SECONDS;
 	private final int SENSIBILITY = 3;
