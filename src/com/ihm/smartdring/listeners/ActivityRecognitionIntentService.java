@@ -31,7 +31,7 @@ public class ActivityRecognitionIntentService extends IntentService {
 	public ActivityRecognitionIntentService() {
 		super("ActivityRecognitionIntentService");
 	}
-	
+
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		Log.d(TAG, "incoming intent");

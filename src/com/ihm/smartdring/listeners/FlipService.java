@@ -3,16 +3,22 @@ package com.ihm.smartdring.listeners;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class FlipService extends Service implements SensorEventListener {
 	private static final String TAG = "FlipService";
+	
+	private final String tagApplicationIsOn = "com.ihm.smartdring.tagapplicationison";
+	private final String tagFlipIsOn = "com.ihm.smartdring.tagflipison";
+	private SharedPreferences settings;
 	
 	private SensorManager mSensorManager;
     private Sensor mAccelerometer;
@@ -34,6 +40,11 @@ public class FlipService extends Service implements SensorEventListener {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(TAG, "started");
+		
+		this.settings = PreferenceManager.getDefaultSharedPreferences(this);
+		
+		if (!(settings.getBoolean(tagFlipIsOn, false) && settings.getBoolean(tagApplicationIsOn, true)))
+			stopSelf();
 		
 		myAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 		mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
@@ -89,7 +100,7 @@ public class FlipService extends Service implements SensorEventListener {
 			pitch = Math.round(Math.toDegrees(mOrientation[1]));
 			roll = Math.round(Math.toDegrees(mOrientation[2]));
 			
-			Log.i(TAG, "pitch : " + pitch + ", roll : " + roll);
+			//Log.i(TAG, "pitch : " + pitch + ", roll : " + roll);
 			
 			if (Math.abs(pitch) < 20 && Math.abs(roll)> 160) {
 				Log.i(TAG, "TURNING RING SILENT, SHUTTING DOWN SERVICE");

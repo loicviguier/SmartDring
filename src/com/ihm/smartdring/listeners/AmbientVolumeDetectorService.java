@@ -105,8 +105,7 @@ public class AmbientVolumeDetectorService extends Service {
         
         myHandler.post(myRunnable);
         
-        Log.d(TAG, "[ServiceAmbientVolume] : Runnable lancé. Booléen = "
-        		+ settings.getBoolean(tagAmbientVolumeIsOn, true));
+        Log.d(TAG, "[ServiceAmbientVolume] : Runnable booted");
         
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
@@ -116,6 +115,7 @@ public class AmbientVolumeDetectorService extends Service {
 	
 	@Override
     public void onDestroy() {
+		Log.d(TAG, "destroyed");
 		myRecorder.stop();
 		myHandler.removeCallbacks(myRunnable);
 		myAudioManager.setStreamVolume(
@@ -137,6 +137,7 @@ public class AmbientVolumeDetectorService extends Service {
 	private void startRecorder() {
 		try {
 			myRecorder.prepare();
+	        myRecorder.start();
 		} catch (IllegalStateException e) {
 			// myRecorder has not been initialized properly
 			initializeRecorder();
@@ -147,7 +148,6 @@ public class AmbientVolumeDetectorService extends Service {
 			showErrorNotification();
 			stopSelf();
 		}
-        myRecorder.start();
 
         // Returns 0 for the first call
         myRecorder.getMaxAmplitude();

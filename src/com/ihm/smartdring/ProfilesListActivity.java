@@ -366,8 +366,12 @@ public class ProfilesListActivity extends Activity {
 			
 			if (ambientSound)
 				startService(ambientVolumeDetectorService);
+			else
+				stopService(ambientVolumeDetectorService);
 			if (walkDetector)
 				startService(walkDetectorService);
+			else
+				stopService(walkDetectorService);
 
 			editor.putInt(tagMaxAuthorizedVolume, volume);
 			editor.putBoolean(tagAmbientVolumeIsOn, ambientSound);

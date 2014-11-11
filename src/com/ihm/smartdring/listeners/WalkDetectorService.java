@@ -64,7 +64,7 @@ public class WalkDetectorService extends Service
 	@Override
 	public void onDestroy() {
 		stopUpdates();
-		Log.d(TAG, "Service stopping");
+		Log.d(TAG, "destroyed");
 	}
 
 
@@ -111,9 +111,6 @@ public class WalkDetectorService extends Service
     public void onConnectionFailed(ConnectionResult connectionResult) {
         // Turn off the request flag
         mInProgress = false;
-
-        // Inform the user
-        
     }
     
     
