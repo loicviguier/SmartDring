@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -226,7 +227,7 @@ public class ProfilesListActivity extends Activity {
 		this.profileSetupActivity = new Intent(this, ProfileSetupActivity.class);
 		this.walkDetectorService = new Intent(this, WalkDetectorService.class);
 		this.ambientVolumeDetectorService = new Intent(this, AmbientVolumeDetectorService.class);
-		this.settings = getPreferences(MODE_PRIVATE);
+		this.settings = PreferenceManager.getDefaultSharedPreferences(this);
 		this.editor = settings.edit();
 		
 		this.profilesListSwitchActivate = (Switch) findViewById(R.id.switchActivate);
@@ -311,6 +312,7 @@ public class ProfilesListActivity extends Activity {
 		if (!settings.contains(tagChosenProfile))
 			// Default value set on the first launch
 			editor.putInt(tagChosenProfile, -1);
+		editor.commit();
 		
 	}
 

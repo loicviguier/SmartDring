@@ -20,6 +20,7 @@ import android.widget.SeekBar;
 public class ProfileSetupActivity extends Activity {
 	// SharedPreferences elements
 	private final String tagApplicationIsOn = "com.ihm.smartdring.tagapplicationison";
+	private final String tagChosenProfile = "com.ihm.smartdring.tagchosenprofile";
 	private final String tagFlipIsOn = "com.ihm.smartdring.tagflipison";
 	private final String tagAmbientVolumeIsOn = "com.ihm.smartdring.tagambientvolumeison";
 	private SharedPreferences settings;
@@ -134,20 +135,24 @@ public class ProfileSetupActivity extends Activity {
     }
     
     private void ambientSound(boolean activate) {
-    	if(settings.getBoolean(tagApplicationIsOn, false))
+    	if(settings.getBoolean(tagApplicationIsOn, false) &&
+    			settings.getInt(tagChosenProfile, -1) == selectedItemID)
 	    	if (activate) {
 	    		stopService(ambientVolumeDetectorService);
 	    		startService(ambientVolumeDetectorService);
+	    		editor.putBoolean(tagAmbientVolumeIsOn, true);
+				editor.commit();
 	    	}
 	    	else {
 	    		stopService(ambientVolumeDetectorService);
+	    		editor.putBoolean(tagAmbientVolumeIsOn, false);
+				editor.commit();
 	    	}
-			editor.putBoolean(tagAmbientVolumeIsOn, activate);
-			editor.commit();
     }
     
     private void walkingAction(boolean activate) {
-    	if(settings.getBoolean(tagApplicationIsOn, false))
+    	if(settings.getBoolean(tagApplicationIsOn, false) &&
+    			settings.getInt(tagChosenProfile, -1) == selectedItemID)
 	    	if (activate) {
 	    		stopService(walkDetectorService);
 	    		startService(walkDetectorService);
@@ -158,12 +163,13 @@ public class ProfileSetupActivity extends Activity {
     }
     
     private void flipToSilence(boolean activate) {
-    	if(settings.getBoolean(tagApplicationIsOn, false)) {
+    	if(settings.getBoolean(tagApplicationIsOn, false) &&
+    			settings.getInt(tagChosenProfile, -1) == selectedItemID) {
 	    	editor.putBoolean(tagFlipIsOn, activate);
 			editor.commit();
     	}
     	else
-    		Log.d("ProfileSetupActivity", "application is off");
+    		Log.d("ProfileSetupActivity", "application is off or we're off-profile");
     }
     
 }
