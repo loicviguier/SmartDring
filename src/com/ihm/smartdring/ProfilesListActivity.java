@@ -192,7 +192,8 @@ public class ProfilesListActivity extends Activity {
 	
 	
 	private void refreshProfilesList() {
-		Log.d(TAG, "refreshing the list");
+		final int chosenProfile = this.settings.getInt(tagChosenProfile, -1);
+		
 		profilesListName = new ArrayList<String>();
 		for(int index = 0; index < profiles.getProfiles().size(); index++) {
 			profilesListName.add(profiles.getProfiles().get(index).getName());
@@ -200,7 +201,18 @@ public class ProfilesListActivity extends Activity {
 
 		adapter = new ArrayAdapter<String>(ProfilesListActivity.this, android.R.layout.simple_list_item_single_choice, profilesListName);
 		profilesListView.setAdapter(adapter);
+		
+		this.profilesListView.post(new Runnable() {
+		    
+			@Override
+		    public void run() {
+		    	profilesListView.setItemChecked(chosenProfile, true);
+		    }
+			
+		});
+		
 		adapter.notifyDataSetChanged();
+		Log.i(TAG, "refreshing the list");
 	}
 	
 	@Override
