@@ -168,7 +168,13 @@ public class ProfilesListActivity extends Activity {
 						profiles.saveProfilesList();
 						refreshProfilesList();
 
-						//TODO Update the chosen profile if he gets deleted
+						// Update the chosen profile if he gets deleted
+						int activeProfile = settings.getInt(tagChosenProfile, -1);
+						if(activeProfile == selectedItemID) {
+							editor.putInt(tagChosenProfile, -1);
+							editor.commit();
+							stopServices();
+						}
 						
 						selectedItemID = -1;
 						return true;
@@ -378,5 +384,18 @@ public class ProfilesListActivity extends Activity {
 			editor.putBoolean(tagFlipIsOn, flipToSilent);
 			editor.commit();
 		}
+	}
+	
+	/**
+	 * Stops all the services, updates
+	 * the SharedPreferences in consequence
+	 */
+	private void stopServices() {
+		Log.d(TAG, "stopping all services");
+		stopService(ambientVolumeDetectorService);
+		stopService(walkDetectorService);
+		editor.putBoolean(tagAmbientVolumeIsOn, false);
+		editor.putBoolean(tagFlipIsOn, false);
+		editor.commit();
 	}
 }

@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.SeekBar;
 
 public class ProfileSetupActivity extends Activity {
 	// SharedPreferences elements
+	private final String tagApplicationIsOn = "com.ihm.smartdring.tagapplicationison";
 	private final String tagFlipIsOn = "com.ihm.smartdring.tagflipison";
 	private final String tagAmbientVolumeIsOn = "com.ihm.smartdring.tagambientvolumeison";
 	private SharedPreferences settings;
@@ -132,30 +134,36 @@ public class ProfileSetupActivity extends Activity {
     }
     
     private void ambientSound(boolean activate) {
-    	if (activate) {
-    		stopService(ambientVolumeDetectorService);
-    		startService(ambientVolumeDetectorService);
-    	}
-    	else {
-    		stopService(ambientVolumeDetectorService);
-    	}
-		editor.putBoolean(tagAmbientVolumeIsOn, activate);
-		editor.commit();
+    	if(settings.getBoolean(tagApplicationIsOn, false))
+	    	if (activate) {
+	    		stopService(ambientVolumeDetectorService);
+	    		startService(ambientVolumeDetectorService);
+	    	}
+	    	else {
+	    		stopService(ambientVolumeDetectorService);
+	    	}
+			editor.putBoolean(tagAmbientVolumeIsOn, activate);
+			editor.commit();
     }
     
     private void walkingAction(boolean activate) {
-    	if (activate) {
-    		stopService(walkDetectorService);
-    		startService(walkDetectorService);
-    	}
-    	else {
-    		stopService(walkDetectorService);
-    	}
+    	if(settings.getBoolean(tagApplicationIsOn, false))
+	    	if (activate) {
+	    		stopService(walkDetectorService);
+	    		startService(walkDetectorService);
+	    	}
+	    	else {
+	    		stopService(walkDetectorService);
+	    	}
     }
     
     private void flipToSilence(boolean activate) {
-    	editor.putBoolean(tagFlipIsOn, activate);
-		editor.commit();
+    	if(settings.getBoolean(tagApplicationIsOn, false)) {
+	    	editor.putBoolean(tagFlipIsOn, activate);
+			editor.commit();
+    	}
+    	else
+    		Log.d("ProfileSetupActivity", "application is off");
     }
     
 }
