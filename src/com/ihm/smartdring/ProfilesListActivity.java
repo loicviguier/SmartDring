@@ -167,8 +167,10 @@ public class ProfilesListActivity extends Activity {
 						profiles.getProfiles().remove(selectedItemID);
 						profiles.saveProfilesList();
 						refreshProfilesList();
-						selectedItemID = -1;
+
 						//TODO Update the chosen profile if he gets deleted
+						
+						selectedItemID = -1;
 						return true;
 					default:
 						return true;

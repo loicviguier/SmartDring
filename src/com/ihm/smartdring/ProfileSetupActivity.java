@@ -2,13 +2,11 @@ package com.ihm.smartdring;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.ListView;
-import android.widget.Switch;
+import android.widget.SeekBar;
 
 
 public class ProfileSetupActivity extends Activity {
@@ -25,6 +23,7 @@ public class ProfileSetupActivity extends Activity {
         setContentView(R.layout.profile_setup_activity);
         
         this.profileSetupListView = (ListView) findViewById(R.id.listViewSetupProfile);
+        SeekBar mySb = (SeekBar) findViewById(R.id.seekBarVolume);
         
         this.profiles = new ProfilesList();
         this.profiles.loadProfilesList();
@@ -41,6 +40,9 @@ public class ProfileSetupActivity extends Activity {
         Profile setupProfile = profiles.getProfiles().get(selectedItemID);
 		
 		this.setTitle(setupProfile.getName());
+		
+		mySb.setMax(100);
+		mySb.setProgress(setupProfile.getVolume());
 		
         boolean[] selectedItemState = {
         		setupProfile.getAmbiantSound(), 

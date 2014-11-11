@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
@@ -16,6 +17,7 @@ import android.util.Log;
  * Since the example does what we wanted it to do, the code is the same
  */
 public class ActivityRecognitionIntentService extends IntentService {
+
 	private static final String TAG = "ActivityRecognitionIntentService";
 	
 	private final String tagMaxAuthorizedVolume = "com.ihm.smartdring.tagmaxauthorizedvolume";
@@ -25,6 +27,7 @@ public class ActivityRecognitionIntentService extends IntentService {
 	private int maxAuthorizedVolume;
 	private int maxSystemVolume;
 	
+	
 	public ActivityRecognitionIntentService() {
 		super("ActivityRecognitionIntentService");
 	}
@@ -32,11 +35,12 @@ public class ActivityRecognitionIntentService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		Log.d(TAG, "incoming intent");
+		this.settings = PreferenceManager.getDefaultSharedPreferences(this);
+		this.myAudioManager = (AudioManager)
+    			getSystemService(Context.AUDIO_SERVICE);
 		
 		// If the incoming intent contains an update
         if (ActivityRecognitionResult.hasResult(intent)) {
-        	myAudioManager = (AudioManager)
-        			getSystemService(Context.AUDIO_SERVICE);
         	maxSystemVolume =
         			myAudioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
         	maxAuthorizedVolume =

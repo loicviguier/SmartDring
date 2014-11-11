@@ -28,6 +28,7 @@ public class AmbientVolumeDetectorService extends Service {
 	private final int DELAY_IN_SECONDS = 10;
 	private final int DELAY =
 			MILLISECONDS_IN_A_SECOND * DELAY_IN_SECONDS;
+	private final int SENSIBILITY = 3;
 	
 	private final String tagAmbientVolumeIsOn = "com.ihm.smartdring.tagambientvolumeison";
 	private final String tagMaxAuthorizedVolume = "com.ihm.smartdring.tagmaxauthorizedvolume";
@@ -48,7 +49,8 @@ public class AmbientVolumeDetectorService extends Service {
 			
 			// While we are active
 			if(activated) {
-				maxAmplitude = myRecorder.getMaxAmplitude();
+				// To increase the sensibility, max amplitude is multiplied
+				maxAmplitude = myRecorder.getMaxAmplitude() * SENSIBILITY;
 				
 				int maxSystemVolume =
 						myAudioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
