@@ -23,11 +23,13 @@ public class ProfileSetupActivity extends Activity {
 	private final String tagChosenProfile = "com.ihm.smartdring.tagchosenprofile";
 	private final String tagFlipIsOn = "com.ihm.smartdring.tagflipison";
 	private final String tagAmbientVolumeIsOn = "com.ihm.smartdring.tagambientvolumeison";
+	private final String tagMaxAuthorizedVolume = "com.ihm.smartdring.tagmaxauthorizedvolume";
 	private SharedPreferences settings;
 	private Editor editor;
 	
 	// Views
 	private ListView profileSetupListView = null;
+	private SeekBar profileSetupSeekBar = null;
 	private ProfileSetupListAdapter adapter = null;
 	
 	// Intents
@@ -53,7 +55,7 @@ public class ProfileSetupActivity extends Activity {
         
         setContentView(R.layout.profile_setup_activity);
         this.profileSetupListView = (ListView) findViewById(R.id.listViewSetupProfile);
-        SeekBar mySb = (SeekBar) findViewById(R.id.seekBarVolume);
+        this.profileSetupSeekBar = (SeekBar) findViewById(R.id.seekBarVolume);
         
         this.profiles = new ProfilesList();
         this.profiles.loadProfilesList();
@@ -71,8 +73,8 @@ public class ProfileSetupActivity extends Activity {
 		
 		this.setTitle(setupProfile.getName());
 		
-		mySb.setMax(100);
-		mySb.setProgress(setupProfile.getVolume());
+		this.profileSetupSeekBar.setMax(100);
+		this.profileSetupSeekBar.setProgress(setupProfile.getVolume());
 		
         boolean[] selectedItemState = {
         		setupProfile.getAmbiantSound(), 
@@ -83,6 +85,27 @@ public class ProfileSetupActivity extends Activity {
         
         this.adapter = new ProfileSetupListAdapter(this, selectedItemState);
         this.profileSetupListView.setAdapter(adapter);
+        
+        this.profileSetupSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				editor.putInt(tagMaxAuthorizedVolume, 
+						profiles.getProfiles().get(selectedItemID).getVolume());
+				editor.commit();
+				profiles.saveProfilesList();
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				profiles.getProfiles().get(selectedItemID).setVolume(progress);
+			}
+		});
     }
 
 
